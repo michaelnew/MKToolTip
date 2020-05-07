@@ -32,7 +32,7 @@ import UIKit
 
 public extension UIView {
 
-    @objc public func showToolTip(identifier: String, title: String? = nil, message: String, button: String? = nil, arrowPosition: MKToolTip.ArrowPosition, preferences: ToolTipPreferences = ToolTipPreferences(), delegate: MKToolTipDelegate? = nil) {
+    @objc func showToolTip(identifier: String, title: String? = nil, message: String, button: String? = nil, arrowPosition: MKToolTip.ArrowPosition, preferences: ToolTipPreferences = ToolTipPreferences(), delegate: MKToolTipDelegate? = nil) {
         let tooltip = MKToolTip(view: self, identifier: identifier, title: title, message: message, button: button, arrowPosition: arrowPosition, preferences: preferences, delegate: delegate)
         tooltip.calculateFrame()
         tooltip.show()
@@ -42,7 +42,7 @@ public extension UIView {
 
 public extension UIBarItem {
     
-    @objc public func showToolTip(identifier: String, title: String? = nil, message: String, button: String? = nil, arrowPosition: MKToolTip.ArrowPosition, preferences: ToolTipPreferences = ToolTipPreferences(), delegate: MKToolTipDelegate? = nil) {
+    @objc func showToolTip(identifier: String, title: String? = nil, message: String, button: String? = nil, arrowPosition: MKToolTip.ArrowPosition, preferences: ToolTipPreferences = ToolTipPreferences(), delegate: MKToolTipDelegate? = nil) {
         if let view = self.view {
             view.showToolTip(identifier: identifier, title: title, message: message, button: button, arrowPosition: arrowPosition, preferences: preferences, delegate: delegate)
         }
@@ -277,7 +277,8 @@ open class MKToolTip: UIView {
     // MARK: Private methods
     
     fileprivate func calculateFrame() {
-        let refViewFrame = presentingView.convert(presentingView.bounds, to: UIApplication.shared.keyWindow);
+        let w = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+        let refViewFrame = presentingView.convert(presentingView.bounds, to: w);
         
         var xOrigin: CGFloat = 0
         var yOrigin: CGFloat = 0
@@ -411,7 +412,8 @@ open class MKToolTip: UIView {
     
     private func drawBackgroundLayer() {
         if let view = self.containerWindow?.rootViewController?.view {
-            let refViewFrame = presentingView.convert(presentingView.bounds, to: UIApplication.shared.keyWindow);
+            let w = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+            let refViewFrame = presentingView.convert(presentingView.bounds, to: w);
             let radius = refViewFrame.center.farCornerDistance()
             let frame = view.bounds
             let layer = RadialGradientBackgroundLayer(frame: frame, center: refViewFrame.center, radius: radius, locations: preferences.drawing.background.gradientLocations, colors: preferences.drawing.background.gradientColors)
